@@ -1,0 +1,161 @@
+# ==============================================================================
+# 🎯 CUSTOM DEATH MESSAGES - MAIN CONFIGURATION
+# ==============================================================================
+# Plugin by SicklySurgeon | Version: 1.2
+# This file controls WHO sees death messages, GLOBAL effects, and core systems.
+# ------------------------------------------------------------------------------
+
+# ==============================================================================
+# 🧪 VALIDACIÓN AVANZADA
+# ==============================================================================
+# Si 'true', el plugin ignorará errores de validación (útil en producción).
+ignore-validation-errors: false
+# Ejecuta validación al iniciar el servidor
+run-initial-validation: true
+
+# ==============================================================================
+# 📩 MESSAGE TARGETING
+# ==============================================================================
+# Controls who receives the death message.
+# ------------------------------------------------------------------------------
+message-to-victim: true
+message-to-world: true
+# If > 0, overrides 'message-to-world'. Only players within this radius (in blocks) see the message.
+message-to-radius: 0
+
+# ==============================================================================
+# 🔊 GLOBAL SOUND SETTINGS
+# ==============================================================================
+# Plays a sound when ANY player dies (unless overridden by group-specific sounds in messages.yml).
+# ------------------------------------------------------------------------------
+play-sound-on-death: true
+# Sound name (e.g., entity.player.death). Full list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+death-sound: entity.player.death
+sound-volume: 1.0
+sound-pitch: 1.0
+
+# NEW: Sound broadcasting options
+sound-broadcast-mode: "WORLD"  # Options: GLOBAL, WORLD, RADIUS, VICTIM_ONLY
+sound-broadcast-radius: 50     # Only used if mode is RADIUS (in blocks)
+
+# ==============================================================================
+# ✨ GLOBAL PARTICLE SETTINGS
+# ==============================================================================
+# Displays a particle effect at the death location.
+# ------------------------------------------------------------------------------
+play-particles-on-death: true
+# Particle type (e.g., EXPLOSION, HEART). Full list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+death-particle: EXPLOSION
+particle-count: 50
+particle-offset-x: 0.5
+particle-offset-y: 0.5
+particle-offset-z: 0.5
+particle-extra: 0.1
+
+# NEW: Particle broadcasting options
+particle-broadcast-mode: "WORLD"  # Options: GLOBAL, WORLD, RADIUS, VICTIM_ONLY
+particle-broadcast-radius: 50     # Only used if mode is RADIUS (in blocks)
+
+# ==============================================================================
+# 🖥️ VISUAL EFFECTS (Title, Action Bar, Screen Darkening)
+# ==============================================================================
+# Enhanced on-death visuals.
+# ------------------------------------------------------------------------------
+play-title-on-death: false
+death-title: "&cYOU DIED"
+death-subtitle: "&7Cause: {cause}"
+
+play-actionbar-on-death: false
+death-actionbar: "&c{victim} has perished!"
+
+# Simulates a darkening effect using particles around the player.
+play-darken-screen-effect: false
+darken-effect-duration-ticks: 20
+darken-effect-particle: CLOUD
+
+# ==============================================================================
+# 🎬 UNIFIED BROADCAST SETTINGS FOR ALL EFFECTS
+# ==============================================================================
+effects-broadcast:
+  # Modes: GLOBAL (all online players), WORLD (same world), RADIUS (distance-based), VICTIM_ONLY
+  default-mode: "WORLD"
+  default-radius: 50
+  
+  # Override per effect type
+  sound-mode: "WORLD"
+  sound-radius: 50
+  
+  particle-mode: "WORLD"
+  particle-radius: 50
+  
+  title-mode: "VICTIM_ONLY"
+  title-radius: 0
+  
+  actionbar-mode: "VICTIM_ONLY"
+  actionbar-radius: 0
+  
+  darken-effect-mode: "RADIUS"
+  darken-effect-radius: 30
+
+# ==============================================================================
+# 🕒 TIME & RESPAWN
+# ==============================================================================
+# ------------------------------------------------------------------------------
+# Format for the {time} placeholder (e.g., "HH:mm:ss").
+time-format: "HH:mm:ss"
+
+# Message sent to a player when they respawn.
+respawn-message-enabled: true
+respawn-message: "&a¡{player} has returned from the dead!"
+
+# ==============================================================================
+# 🎲 EPIC DEATH SYSTEM
+# ==============================================================================
+# A small chance for a death to trigger special effects and messages.
+# ------------------------------------------------------------------------------
+epic-death-chance: 0.05 # 5% chance (0.0 = never, 1.0 = always)
+
+# ==============================================================================
+# 💰 ECONOMY SYSTEM (Requires Vault)
+# ==============================================================================
+# Deducts money from players when a death message is sent.
+# ------------------------------------------------------------------------------
+cost-per-death-message: 0.0 # Set to 0.0 to disable.
+# Groups (by permission) exempt from paying the cost.
+exempt-groups-from-cost:
+  - "admin"
+
+# ==============================================================================
+# 🌍 PER-WORLD MESSAGES
+# ==============================================================================
+# Overrides ALL other messages if the death occurs in a specific world.
+# ------------------------------------------------------------------------------
+per-world-messages:
+#  world:
+#    default: "&4{victim} has died."
+  # world_nether:
+  #   default: "&4{victim} was consumed by the fires of Hell."
+  # world_the_end:
+  #   default: "&5{victim} faded into the eternal void."
+
+# ==============================================================================
+# 🧑 PERMISSIONS & HELP
+# ==============================================================================
+# ------------------------------------------------------------------------------
+# If true, uses permission groups (admin, vip, default) for custom messages.
+use-permission-based-messages: true
+
+# Defines which help pages each permission group can see via /cdmhelp.
+# Use "all" to see all pages. Groups: "op", "admin", "vip", "default".
+help-permissions:
+  op: "all"
+  admin: "all"
+  vip: [1, 2]
+  default: [1]
+
+# ==============================================================================
+# 🎨 COLOR & LEGACY SUPPORT
+# ==============================================================================
+# ------------------------------------------------------------------------------
+# Set to 'true' if your server runs Minecraft 1.15 or older.
+legacy-color-support: false

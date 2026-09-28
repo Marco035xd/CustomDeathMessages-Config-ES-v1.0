@@ -1,0 +1,265 @@
+# ==============================================================================
+# 🎯 CUSTOM DEATH MESSAGES - MESSAGE & EFFECT CONFIGURATION
+# ==============================================================================
+# Plugin by SicklySurgeon | Version: 1.2
+#
+# 🎨 COLOR FORMATTING:
+#   - Use `&` for Minecraft colors (e.g., &a = green, &c = red)
+#   - Use `<#rrggbb>` for hex colors (requires Spigot 1.16+)
+#
+# 📌 INTEGRATED PLACEHOLDER GUIDE (READ THIS FIRST!)
+# -----------------------------------------------------------------------------
+# Placeholders are dynamic variables replaced with real game data.
+# Use them like this: {placeholder_name}
+# -----------------------------------------------------------------------------
+# {victim}          - Name of the player who died
+# {killer_name}     - Name of the entity RESPONSIBLE for the kill (player, creeper, shooter)
+# {killer_source}   - DIRECT source of the damage (arrow, TNT, fireball, lava, etc.)
+# {killer_displayname} - Killer's display name (includes PAPI prefixes)
+# {cause}           - Technical cause of death (FALL, FIRE, ENTITY_ATTACK, etc.)
+# {world}           - World where the death occurred
+# {biome}           - Biome where the death occurred (e.g., "Plains", "Nether Wastes")
+# {x}, {y}, {z}     - Exact coordinates of the death
+# {time}            - Server time (format set in config.yml)
+# {distance}        - Distance in blocks between victim and killer
+# {victim_weapon}   - Name of the weapon in the victim's main hand
+# {victim_effects}  - List of active potion effects on victim (e.g., "Strength, Speed")
+# {cost}            - Cost of the message (if economy is active)
+# -----------------------------------------------------------------------------
+# 💡 You can use ANY PlaceholderAPI placeholder from other plugins
+# 💡 If 'use-permission-based-messages' is true in config.yml, messages are loaded by group
+# ==============================================================================
+# ==============================================================================
+# 💥 EPIC DEATH MESSAGES & EFFECTS
+# ==============================================================================
+# Triggered by the probability set in config.yml
+# ------------------------------------------------------------------------------
+epic-messages:
+  - "&6&l!!! EPIC DEATH !!! &e{victim} &6was annihilated by &e{killer_name}&6!"
+  - "&4&l!!! APOCALYPSE !!! &c{victim} &4vanished by &c{killer_name}&4!"
+  - "&5&l!!! FINAL FANTASY !!! &d{victim} &5succumbed to &d{killer_name}&5!"
+  - "&b&l!!! SNIPER !!! &3{victim} &bwas sniped from &3{distance} &3blocks by &b{killer_name}&b!"
+# Epic Death Visual/Sound Effects (Override global settings)
+epic-effects:
+  sound: "ENTITY_LIGHTNING_BOLT_THUNDER"
+  particle: "EXPLOSION_EMITTER"
+  particle-count: 100
+  title: "&6&lEPIC DEATH!"
+  subtitle: "&e{victim} died in style!"
+# ==============================================================================
+# 🌍 BROADCAST SYSTEM MESSAGES
+# ==============================================================================
+broadcast-system:
+  # Titles
+  test-title: "&6&l=== Broadcast Test ==="
+  modes-title: "&6&l=== Broadcast Modes ==="
+  
+  # Mode descriptions
+  global-desc: "&aGLOBAL &7- All online players on the server"
+  world-desc: "&aWORLD &7- All players in the same world"
+  radius-desc: "&aRADIUS &7- Players within specified radius"
+  victim-desc: "&aVICTIM_ONLY &7- Only the player who died"
+  
+  # Messages
+  no-permission: "&cYou don't have permission to use broadcast commands!"
+  player-only: "&cOnly players can use this command!"
+  invalid-mode: "&cInvalid broadcast mode! Use: GLOBAL, WORLD, RADIUS, VICTIM"
+  invalid-sound: "&cInvalid sound name! Using default."
+  invalid-particle: "&cInvalid particle name! Using default."
+  success-sound: "&a✓ Broadcasted sound '{sound}' with mode: {mode}"
+  success-particle: "&a✓ Broadcasted particles '{particle}' with mode: {mode}"
+  success-message: "&a✓ Broadcasted message with mode: {mode}"
+  success-global: "&a✓ Sent global {type} to all players!"
+  
+  # Test results
+  test-global: "&eGLOBAL: &fWould reach {count} players"
+  test-world: "&eWORLD: &fWould reach {count} players in world '{world}'"
+  test-radius: "&eRADIUS({radius}): &fWould reach {count} players"
+  test-victim: "&eVICTIM_ONLY: &fWould reach 1 player (you)"
+  
+  # Help
+  help-title: "&6&l=== Broadcast Command Help ==="
+  help-sound: "&a/cdm broadcast sound <mode> [radius] [sound]"
+  help-particle: "&a/cdm broadcast particle <mode> [radius] [particle]"
+  help-message: "&a/cdm broadcast message <mode> <message>"
+  help-test: "&a/cdm broadcast test - Test all modes"
+  help-modes: "&a/cdm broadcast modes - Show available modes"
+  help-global: "&a/cdm broadcast global <sound|particle|message> - Global broadcast"
+  
+  # Current settings
+  current-settings: "&6Current Config Settings:"
+  current-sound: "&aSound Mode: &f{mode}"
+  current-particle: "&aParticle Mode: &f{mode}"
+  
+  # Radius suffix
+  radius-suffix: "&7 (radius: {radius} blocks)"
+# ==============================================================================
+# 🧠 CONDITIONAL MESSAGES (Smart, Context-Aware Messages)
+# ==============================================================================
+# Define messages that ONLY show if a condition is met
+# Operators: contains, equals, startsWith, endsWith, >, <, >=, <=
+# Combine with AND / OR
+# -----------------------------------------------------------------------------
+# 🎯 EXAMPLE: Long-distance kill
+# - condition: "{distance} > 20"
+#   message: "&6&lSNIPER! &e{victim} &6was eliminated by &e{killer_name} &6from {distance} &6blocks away."
+#
+# 🎯 EXAMPLE: Death by poison
+# - condition: "{victim_effects} contains 'Poison'"
+#   message: "&2{victim} &2succumbed to poison after being attacked by &2{killer_name}&2."
+# -----------------------------------------------------------------------------
+conditional-messages:
+  default:
+    messages:
+      ENTITY_ATTACK:
+        - condition: "{distance} > 10"
+          message: "&c{victim} &4was sniped by &c{killer_name}&4 from {distance} blocks away!"
+        - condition: "{victim_effects} contains 'Poison'"
+          message: "&c{victim} &2died poisoned by &c{killer_name}&2!"
+        - default: "&c{victim} &4was eliminated by &c{killer_name}&4 using {killer_source}."
+      FALL:
+        - condition: "{distance} > 5"
+          message: "&c{victim} &4plummeted from a height of {distance} blocks!"
+        - default: "&c{victim} &4forgot that gravity exists."
+      FIRE:
+        - condition: "{biome} equals 'Nether Wastes'"
+          message: "&c{victim} &4was consumed by the Nether's eternal flames."
+        - default: "&c{victim} &4turned into a human torch."
+# ==============================================================================
+# ⚙️ SYSTEM & COMMAND MESSAGES
+# ==============================================================================
+# Used by the plugin for internal operations and commands
+# ------------------------------------------------------------------------------
+system-messages:
+  # Plugin Load/Unload
+  plugin-enabled: "&a[CustomDeathMessages] Plugin loaded successfully."
+  plugin-disabled: "&c[CustomDeathMessages] Plugin disabled."
+  reload-success: "&a[CustomDeathMessages] Configuration reloaded successfully."
+  reload-failure: "&c[CustomDeathMessages] Error reloading: {error}"
+  no-permission-reload: "&cYou do not have permission to reload the configuration."
+  no-permission-test: "&cYou do not have permission to use this command."
+  no-permission-bypass: "&cYou do not have permission to bypass death messages."
+  players-only: "&cOnly players can use this command."
+  # Test Command
+  usage-test: "&cUsage: /cdm test <cause> [killer] [source]"
+  specify-cause: "&cSpecify a cause: FALL, FIRE, ENTITY_ATTACK, etc."
+  invalid-cause: "&cInvalid cause. Use: {causes}"
+  test-message-prefix: "&a[Test Message] &f"
+  # Configuration Warnings
+  config-invalid-sound: "&cInvalid sound '{sound_name}'. Using default: entity.player.death."
+  config-invalid-particle: "&cInvalid particle '{particle_name}'. Using default: EXPLOSION."
+  config-invalid-darken-particle: "&cInvalid darken particle '{particle_name}'. Using default: CLOUD."
+  message-not-found: "&cNo message found for world/group/cause. Using default."
+  # PlaceholderAPI Error
+  papi-error: "&cPlaceholderAPI detected but class not found. Is it installed correctly?"
+  # Economy System
+  economy-cost-message: "&c${cost} &7has been deducted from your account."
+  economy-insufficient-funds: "&cYou cannot afford the death message cost (${cost})."
+  economy-exempt-message: "&7(Exempt from cost)"
+  # Configuration Validator
+  config-validator-title: "✅ [CustomDeathMessages] Configuration Validation:"
+  config-validator-success-all: "✅ All configurations are valid!"
+  config-validator-summary-prefix: "ℹ️ Current configuration: "
+  config-validator-error-count: "❌ {error_count} issues found. Review messages above."
+  config-validator-sound-found: "✅ Sound '{sound_name}' found."
+  config-validator-particle-found: "✅ Particle '{particle_name}' found."
+  config-validator-sound-not-found: "❌ Sound '{sound_name}' not found. A default value will be used."
+  config-validator-particle-not-found: "❌ Particle '{particle_name}' is invalid. A default value will be used."
+  config-validator-condition-syntax-warning: "⚠️ Warning: Condition '{condition}' at '{location}' has syntax error (invalid operator '{operator}'). Default message will be used."
+  config-validator-condition-placeholder-warning: "⚠️ Warning: Condition '{condition}' at '{location}' has malformed placeholder."
+  config-validator-summary-message-to-world: "Messages to world. "
+  config-validator-summary-message-to-radius: "Radius: {radius} blocks. "
+  config-validator-summary-sound-enabled: "Sound: Enabled. "
+  config-validator-summary-sound-disabled: "Sound: Disabled. "
+  config-validator-summary-particles-enabled: "Particles: Enabled. "
+  config-validator-summary-particles-disabled: "Particles: Disabled. "
+# ==============================================================================
+# 🆘 INTERACTIVE HELP SYSTEM
+# ==============================================================================
+help-system:
+  general-header: "&6&l=== CustomDeathMessages Help ==="
+  general-description: "&eCustomize death messages, sounds, particles, and more."
+  general-usage: "&7Use &f/cdm help <command> &7to see details about a specific command."
+  commands:
+    test-desc: "Test a death message with a specific cause."
+    reload-desc: "Reload config.yml and messages.yml without restarting."
+    config-validate-desc: "Check if your configuration is valid."
+    help-desc: "Show this help message."
+  command-details:
+    test:
+      title: "&6&lCommand: /cdm test"
+      description: "Simulates a death to preview how the message will look."
+      usage: "/cdm test <cause> [player] [killer] [source]"
+      permission: "cdm.test"
+    reload:
+      title: "&6&lCommand: /cdm reload"
+      description: "Reload all configuration files."
+      usage: "/cdm reload"
+      permission: "cdm.reload"
+    "config validate":
+      title: "&6&lCommand: /cdm config validate"
+      description: "Validates your current configuration."
+      usage: "/cdm config validate"
+      permission: "cdm.reload"
+    help:
+      title: "&6&lCommand: /cdm help"
+      description: "Shows general or specific help."
+      usage: "/cdm help [command]"
+      permission: "cdm.use"
+  unknown-command: "&cCommand '&f{command}&c' not found. Use &f/cdm help&c to see the list."
+# ==============================================================================
+# 👥 GROUP: default (Regular Players)
+# ==============================================================================
+# Messages and sounds for players without special permissions
+# ------------------------------------------------------------------------------
+groups:
+  default:
+    # Override global sound for this group (uncomment to enable)
+    # death-sound: ENTITY_PLAYER_HURT
+    # sound-volume: 0.8
+    # sound-pitch: 0.9
+    default-messages:
+      - "&c{victim} has met their end."
+      - "&4{victim} just became a statistic."
+    cause-messages:
+      ENTITY_ATTACK:
+        - "&c{victim} &4was massacred by &c{killer_name}&4."
+        - "&4&lBRUTAL! &c{killer_name} &4eliminated &c{victim}&4."
+      FALL:
+        - "&c{victim} fell to their doom!"
+        - "&c{victim} forgot how to fly."
+      FIRE: "&c{victim} &4turned into a human torch."
+# ==============================================================================
+# 👑 GROUP: vip (VIP Players)
+# ==============================================================================
+# Messages and sounds for players with 'cdm.message.vip' permission
+# ------------------------------------------------------------------------------
+  vip:
+    death-sound: entity.player.levelup
+    sound-volume: 1.2
+    sound-pitch: 1.5
+    default-messages:
+      - "&6✧ &e{victim} has fallen! &6✧"
+      - "&6✧ &eRIP &e{victim} &6✧"
+    cause-messages:
+      FALL:
+        - "&6✧ &e{victim} &6✧ &emade a forced landing."
+        - "&6✧ &e{victim} &6✧ &etried skydiving without a parachute."
+# ==============================================================================
+# 🛡️ GROUP: admin (Administrators)
+# ==============================================================================
+# Messages and sounds for players with 'cdm.message.admin' permission
+# ------------------------------------------------------------------------------
+  admin:
+    death-sound: entity.wither.spawn
+    sound-volume: 2.0
+    sound-pitch: 0.8
+    default-messages: "&4[ADMIN] &c{victim} has died. Cause: {cause}"
+    cause-messages:
+      ENTITY_ATTACK: "&4[ADMIN] &c{victim} &4was eliminated by &c{killer_name} &4({cause})"
+# ==============================================================================
+# 🔔 UPDATE NOTIFICATION MESSAGES
+# ==============================================================================
+update-notifications:
+  log: "&a[CustomDeathMessages] New version available! Current: {current_version}, New: {new_version}. View at: {project_url}"
+  player: "&e[CustomDeathMessages] &aNew version available! &fCurrent: {current_version}, New: {new_version}. View at: {project_url}"
